@@ -3,8 +3,7 @@ $breakpoints: (
     xl: 1200,
     lg: 991,
     md: 760,
-    sm: 600,
-    xs: 420,
+    sm: 585,
 );
 
 $displays: block, flex, grid, inline-flex, inline-grid, none;
@@ -21,7 +20,16 @@ $layouts: (
 );
 $positions: static, relative, absolute, fixed;
 $positions-values: left, right, bottom, top;
-$colors: (primary: #2196f3, grey: #9e9e9e);
+$colors: (
+    primary: (33, 150, 243),
+    grey: (158, 158, 158)
+);
+
+:root {
+    --tx-opacity: 1;
+    --border-opacity: 1;
+    --bg-opacity: 1;
+}
 
 @mixin classes($key: "") {
     @for $i from 0 through 10 {
@@ -29,7 +37,7 @@ $colors: (primary: #2196f3, grey: #9e9e9e);
         $k: #{$key}-#{$i};
 
         .tx-opacity#{$k} {
-            --text-opacity: #{$opacity} !important;
+            --tx-opacity: #{$opacity} !important;
         }
 
         .opacity#{$k} {
@@ -39,31 +47,57 @@ $colors: (primary: #2196f3, grey: #9e9e9e);
         .border-opacity#{$k} {
             --border-opacity: #{$opacity} !important;
         }
+
         .scale#{$k} {
             transform: scale($i);
         }
+    }
 
+    @for $i from 0 through 9 {
+        $k: #{$key}-#{$i};
         @each $lName,
         $lValue in $layouts {
+            $v: $i * 0.25;
+
+            @if($i > 4) {
+                $v: $i * 0.5
+            }
+
             .#{$lName}e#{$k} {
-                #{$lValue}: #{$i * 0.25}em !important;
+                #{$lValue}: #{$v}em !important;
+            }
+
+            .-#{$lName}e#{$k} {
+                #{$lValue}: -#{$v}em !important;
             }
 
             @each $name,
             $value in $spaces {
                 .#{$lName}e#{$name}#{$k} {
-                    #{$lValue}-#{$value}: #{$i * 0.25}em !important;
+                    #{$lValue}-#{$value}: #{$v}em !important;
+                }
+
+                .-#{$lName}e#{$name}#{$k} {
+                    #{$lValue}-#{$value}: -#{$v}em !important;
                 }
             }
 
             .#{$lName}#{$k} {
-                #{$lValue}: #{$i * 0.25}rem !important;
+                #{$lValue}: #{$v}rem !important;
+            }
+
+            .-#{$lName}#{$k} {
+                #{$lValue}: -#{$v}rem !important;
             }
 
             @each $name,
             $value in $spaces {
                 .#{$lName}#{$name}#{$k} {
-                    #{$lValue}-#{$value}: #{$i * 0.25}rem !important;
+                    #{$lValue}-#{$value}: #{$v}rem !important;
+                }
+
+                .-#{$lName}#{$name}#{$k} {
+                    #{$lValue}-#{$value}: -#{$v}rem !important;
                 }
             }
         }
@@ -105,12 +139,21 @@ $colors: (primary: #2196f3, grey: #9e9e9e);
         }
     }
 
-    @each $n, $color in $colors {
-        .text#{$key}-#{$n} {
-            color: $color !important;
+    @each $n,
+    $color in $colors {
+        $name: #{$key}-#{$n};
+        $clr: rgba($color, var(--tx-opacity));
+
+        .tx#{$name} {
+            color: $clr !important;
         }
-        .bg#{$key}-#{$n} {
-            background-color: $color !important;
+
+        .bg#{$name} {
+            background-color: $clr !important;
+        }
+
+        .border#{$name} {
+            border: 1px solid $clr;
         }
     }
 
@@ -124,6 +167,26 @@ $colors: (primary: #2196f3, grey: #9e9e9e);
 
     .translate#{$key}-middle {
         transform: translate(-50%, -50%) !important;
+    }
+
+    .leading#{$key}-0 {
+        line-height: 0
+    }
+
+    .leading#{$key}-1 {
+        line-height: 1
+    }
+
+    .leading#{$key}-3 {
+        line-height: 1.25;
+    }
+
+    .leading#{$key}-4 {
+        line-height: 1.5;
+    }
+
+    .leading#{$key}-5 {
+        line-height: 1.75;
     }
 }
 
