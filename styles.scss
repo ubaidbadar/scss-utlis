@@ -21,6 +21,7 @@ $layouts: (
 );
 $positions: static, relative, absolute, fixed;
 $positions-values: left, right, bottom, top;
+$colors: (primary: #2196f3, grey: #9e9e9e);
 
 @mixin classes($key: "") {
     @for $i from 0 through 10 {
@@ -101,6 +102,15 @@ $positions-values: left, right, bottom, top;
 
         .#{$k}#{$key}-100 {
             #{$k}: 100% !important;
+        }
+    }
+
+    @each $n, $color in $colors {
+        .text#{$key}-#{$n} {
+            color: $color !important;
+        }
+        .bg#{$key}-#{$n} {
+            background-color: $color !important;
         }
     }
 
