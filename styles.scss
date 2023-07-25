@@ -1,0 +1,130 @@
+$breakpoints: (
+    2xl: 1500,
+    xl: 1200,
+    lg: 991,
+    md: 760,
+    sm: 600,
+    xs: 420,
+);
+
+$displays: block, flex, grid, inline-flex, inline-grid, none;
+$spaces: (
+    l: left,
+    r: right,
+    t: top,
+    b: bottom
+);
+
+$layouts: (
+    m: margin,
+    p: padding
+);
+$positions: static, relative, absolute, fixed;
+$positions-values: left, right, bottom, top;
+
+@mixin classes($key: "") {
+    @for $i from 0 through 10 {
+        $opacity: #{calc($i / 10)};
+        $k: #{$key}-#{$i};
+
+        .tx-opacity#{$k} {
+            --text-opacity: #{$opacity} !important;
+        }
+
+        .opacity#{$k} {
+            opacity: #{$opacity} !important;
+        }
+
+        .border-opacity#{$k} {
+            --border-opacity: #{$opacity} !important;
+        }
+        .scale#{$k} {
+            transform: scale($i);
+        }
+
+        @each $lName,
+        $lValue in $layouts {
+            .#{$lName}e#{$k} {
+                #{$lValue}: #{$i * 0.25}em !important;
+            }
+
+            @each $name,
+            $value in $spaces {
+                .#{$lName}e#{$name}#{$k} {
+                    #{$lValue}-#{$value}: #{$i * 0.25}em !important;
+                }
+            }
+
+            .#{$lName}#{$k} {
+                #{$lValue}: #{$i * 0.25}rem !important;
+            }
+
+            @each $name,
+            $value in $spaces {
+                .#{$lName}#{$name}#{$k} {
+                    #{$lValue}-#{$value}: #{$i * 0.25}rem !important;
+                }
+            }
+        }
+    }
+
+    @for $i from 0 through 6 {
+        .col#{$key}-#{$i} {
+            grid-column: repeat(#{$i});
+        }
+
+        .flex#{$key}-#{$i} {
+            flex: #{$i};
+        }
+    }
+
+    @each $display in $displays {
+        .d#{$key}-#{$display} {
+            display: $display !important;
+        }
+    }
+
+    @each $position in $positions {
+        .p#{$key}-#{$position} {
+            position: $position !important;
+        }
+    }
+
+    @each $k in $positions-values {
+        .#{$k}#{$key}-0 {
+            #{$k}: 0 !important;
+        }
+
+        .#{$k}#{$key}-50 {
+            #{$k}: 50% !important;
+        }
+
+        .#{$k}#{$key}-100 {
+            #{$k}: 100% !important;
+        }
+    }
+
+    .translate#{$key}-middle-y {
+        transform: translateY(-50%) !important;
+    }
+
+    .translate#{$key}-middle-x {
+        transform: translateX(-50%) !important;
+    }
+
+    .translate#{$key}-middle {
+        transform: translate(-50%, -50%) !important;
+    }
+}
+
+
+
+@include classes();
+
+@each $key,
+$breakpoint in $breakpoints {
+    @media (min-width: #{$breakpoint}px) {
+        $k: -#{$key};
+        @include classes($k);
+    }
+}
