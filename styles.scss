@@ -1,9 +1,14 @@
+$colors: (
+    primary: (33, 150, 243),
+    grey: (158, 158, 158)
+);
+
 $breakpoints: (
-    2xl: 1500,
-    xl: 1200,
-    lg: 991,
-    md: 760,
     sm: 585,
+    md: 760,
+    lg: 991,
+    xl: 1200,
+    2xl: 1500,
 );
 
 $displays: block, flex, grid, inline-flex, inline-grid, none;
@@ -20,15 +25,12 @@ $layouts: (
 );
 $positions: static, relative, absolute, fixed;
 $positions-values: left, right, bottom, top;
-$colors: (
-    primary: (33, 150, 243),
-    grey: (158, 158, 158)
-);
 
 :root {
     --tx-opacity: 1;
     --border-opacity: 1;
     --bg-opacity: 1;
+    --app-height: 100vh;
 }
 
 @mixin classes($key: "") {
@@ -55,30 +57,31 @@ $colors: (
 
     @for $i from 0 through 9 {
         $k: #{$key}-#{$i};
+        $condition: $i != 0 and $i < 7 and $key == "";
+        $v: $i * 0.25;
+
+        @if($i > 4) {
+            $v: $v + (($i - 4) * 0.25);
+        }
+
         @each $lName,
         $lValue in $layouts {
-            $v: $i * 0.25;
-
-            @if($i > 4) {
-                $v: $i * 0.5
-            }
-
-            .#{$lName}e#{$k} {
-                #{$lValue}: #{$v}em !important;
-            }
-
-            .-#{$lName}e#{$k} {
-                #{$lValue}: -#{$v}em !important;
-            }
 
             @each $name,
             $value in $spaces {
-                .#{$lName}e#{$name}#{$k} {
-                    #{$lValue}-#{$value}: #{$v}em !important;
+                .#{$lName}#{$name}#{$k} {
+                    #{$lValue}-#{$value}: #{$v}rem !important;
                 }
-
-                .-#{$lName}e#{$name}#{$k} {
-                    #{$lValue}-#{$value}: -#{$v}em !important;
+                @if($condition) {
+                    .#{$lName}e#{$name}#{$k} {
+                        #{$lValue}-#{$value}: #{$v}em !important;
+                    }
+    
+                    @if($lName =="m") {
+                        .-#{$lName}e#{$name}#{$k} {
+                            #{$lValue}-#{$value}: -#{$v}em !important;
+                        }
+                    }
                 }
             }
 
@@ -86,26 +89,37 @@ $colors: (
                 #{$lValue}: #{$v}rem !important;
             }
 
-            .-#{$lName}#{$k} {
-                #{$lValue}: -#{$v}rem !important;
+            
+
+            .#{$lName}x#{$k} {
+                @extend .#{$lName}l#{$k}, .#{$lName}r#{$k};
             }
-
-            @each $name,
-            $value in $spaces {
-                .#{$lName}#{$name}#{$k} {
-                    #{$lValue}-#{$value}: #{$v}rem !important;
+            .#{$lName}y#{$k} {
+                @extend .#{$lName}t#{$k}, .#{$lName}b#{$k};
+            }
+            @if($condition) {
+                .#{$lName}xe#{$k} {
+                    @extend .#{$lName}el#{$k}, .#{$lName}er#{$k};
                 }
-
-                .-#{$lName}#{$name}#{$k} {
-                    #{$lValue}-#{$value}: -#{$v}rem !important;
+                .#{$lName}ye#{$k} {
+                    @extend .#{$lName}et#{$k}, .#{$lName}eb#{$k};
+                }
+                @if($lName =="m") {
+                    .-#{$lName}xe#{$k} {
+                        @extend .-#{$lName}el#{$k}, .-#{$lName}er#{$k};
+                    }
+                    .-#{$lName}ye#{$k} {
+                        @extend .-#{$lName}et#{$k}, .-#{$lName}eb#{$k};
+                    }
                 }
             }
         }
+
     }
 
     @for $i from 0 through 6 {
         .col#{$key}-#{$i} {
-            grid-column: repeat(#{$i});
+            grid-template-columns: repeat(#{$i}, 1fr);
         }
 
         .flex#{$key}-#{$i} {
@@ -157,6 +171,30 @@ $colors: (
         }
     }
 
+    .w#{$key}-100 {
+        width: 100% !important;
+    }
+
+    .min-w#{$key}-100 {
+        height: 100% !important;
+    }
+
+    .h#{$key}-screen {
+        height: var(--app-height) !important;
+    }
+
+    .min-h#{$key}-screen {
+        min-height: var(--app-height) !important;
+    }
+
+    .h#{$key}-100 {
+        width: 100% !important;
+    }
+
+    .min-h#{$key}-100 {
+        height: 100% !important;
+    }
+
     .translate#{$key}-middle-y {
         transform: translateY(-50%) !important;
     }
@@ -170,27 +208,63 @@ $colors: (
     }
 
     .leading#{$key}-0 {
-        line-height: 0
+        line-height: 0 !important;
     }
 
     .leading#{$key}-1 {
-        line-height: 1
+        line-height: 1 !important;
     }
 
     .leading#{$key}-3 {
-        line-height: 1.25;
+        line-height: 1.25 !important;
     }
 
     .leading#{$key}-4 {
-        line-height: 1.5;
+        line-height: 1.5 !important;
     }
 
     .leading#{$key}-5 {
-        line-height: 1.75;
+        line-height: 1.75 !important;
+    }
+
+    .ai#{$key}-start {
+        align-items: flex-start !important;
+    }
+
+    .ai#{$key}-end {
+        align-items: flex-end !important;
+    }
+
+    .ai#{$key}-center {
+        align-items: center !important;
+    }
+
+    .jc#{$key}-start {
+        justify-content: flex-start !important;
+    }
+
+    .jc#{$key}-end {
+        justify-content: flex-end !important;
+    }
+
+    .jc#{$key}-center {
+        justify-content: center !important;
+    }
+
+    .jc#{$key}-between {
+        justify-content: space-between !important;
+    }
+    .flex#{$key}-column {
+        flex-direction: column !important;
+    }
+    .flex#{$key}-row {
+        flex-direction: row !important;
     }
 }
 
-
+.border {
+    border: 1px solid;
+}
 
 @include classes();
 
